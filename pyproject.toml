@@ -1,0 +1,27 @@
+[project]
+name = "fe-ec"
+version = "0.1.0"
+description = "Librería para la generación y envío de facturas electrónicas en Ecuador según normativa del SRI"
+authors = [
+    {name = "OpenLatina",email = "openlatina.cue@gmail.com"}
+]
+readme = "README.md"
+repository = "https://github.com/angie1590/fe_ec.git"
+keywords = ["facturación electrónica", "Ecuador", "SRI", "firma digital"]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+lxml = "^4.9.3"  # Para manejar XML
+cryptography = "^41.0.3"  # Para firma digital
+requests = "^2.31.0"  # Para comunicación con el SRI
+xmlsec = "^1.3.12"  # Para firmar digitalmente los documentos XML
+pydantic = "^2.1.1"  # Para validación de datos
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"  # Para realizar pruebas
+black = "^23.1.0"  # Para formateo de código
+flake8 = "^6.0.0"  # Para análisis de código
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
