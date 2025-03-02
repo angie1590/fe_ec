@@ -10,17 +10,19 @@ repository = "https://github.com/angie1590/fe_ec.git"
 keywords = ["facturación electrónica", "Ecuador", "SRI", "firma digital"]
 
 [tool.poetry.dependencies]
-python = ">=3.10"
-lxml = "^4.9.3"  # Para manejar XML
-cryptography = "^41.0.3"  # Para firma digital
-requests = "^2.31.0"  # Para comunicación con el SRI
-xmlsec = "^1.3.12"  # Para firmar digitalmente los documentos XML
-pydantic = "^2.1.1"  # Para validación de datos
+python = ">=3.8.1,<3.11"
+requests = "^2.31.0"
+lxml = "^4.9.3"
+cryptography = "^41.0.3"
+xmlsec = "^1.3.12"
+pydantic = "^2.1.1"
+xmlschema = "^3.4.3"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.2.0"  # Para realizar pruebas
-black = "^23.1.0"  # Para formateo de código
-flake8 = "^6.0.0"  # Para análisis de código
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+black = "^23.1.0"
+flake8 = "^6.1.0"
+responses = "^0.25.6"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
