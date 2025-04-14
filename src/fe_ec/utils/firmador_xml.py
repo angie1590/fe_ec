@@ -1,73 +1,42 @@
-from signxml import XMLSigner, methods
-from lxml import etree
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.serialization import pkcs12
-from cryptography.hazmat.primitives import hashes
-
-from signxml import XMLSigner, methods
-
-class XMLSignerWithSHA1(XMLSigner):
-    def check_deprecated_methods(self):
-        # Anula la validación interna de algoritmos inseguros
-        pass
+import subprocess
+import os
 
 
-def firmar_xml_con_p12(xml_str: str, p12_path: str, p12_password: str):
-    """
-    Firma un archivo XML utilizando un certificado P12.
+class FirmadorXML:
+    def __init__(self):
+        # Ruta absoluta del directorio donde se encuentra este archivo
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.jar_path = os.path.join(self.base_dir, "FirmaElectronica", "FirmaElectronica.jar")
 
-    :param xml_str: XML en formato de cadena
-    :param p12_path: Ruta al archivo P12
-    :param p12_password: Contraseña del archivo P12
-    :return: XML firmado (bytes)
-    """
-    try:
-        # Habilitar SHA1 explícitamente
-        hashes.SHA1._deprecated_algorithm = False
+    def firmar_xml(self, xml_path: str, output_path: str, p12_path: str, p12_password: str) -> str:
+        """
+        Firma un archivo XML utilizando el ejecutable Java basado en XAdES-BES.
+        :param xml_path: Ruta del archivo XML sin firmar.
+        :param output_path: Ruta donde se guardará el XML firmado.
+        :param p12_path: Ruta del certificado digital (.p12).
+        :param p12_password: Contraseña del archivo .p12.
+        :return: Ruta del archivo XML firmado.
+        """
+        try:
+            # ⚠️ Orden correcto de parámetros exigido por el .jar:
+            # java -jar FirmaElectronica.jar <input.xml> <firma.p12> <clave> <output.xml>
+            cmd = [
+                "java",
+                "-jar",
+                self.jar_path,
+                xml_path,
+                p12_path,
+                p12_password,
+                output_path
+            ]
 
-        # Leer archivo .p12
-        with open(p12_path, 'rb') as p12_file:
-            p12_data = p12_file.read()
+            result = subprocess.run(cmd, capture_output=True, text=True)
 
-        # Cargar clave y certificado en formato PEM
-        key_pem, cert_pem = load_pkcs12(p12_data, p12_password)
+            if result.returncode != 0:
+                raise RuntimeError(f"❌ Error ejecutando FirmaElectronica.jar:\n{result.stderr.strip()}")
 
-        # Crear el objeto XMLSigner con algoritmos SHA256
-        signer = XMLSignerWithSHA1(
-            method=methods.enveloped,
-            signature_algorithm="rsa-sha1",
-            digest_algorithm="sha1",
-            c14n_algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
-        )
+            print(f"✅ XML firmado correctamente: {output_path}")
+            return output_path
 
-        # Parsear XML de entrada
-        xml_root = etree.fromstring(xml_str.encode("utf-8"))
-
-        # Firmar el XML
-        signed_xml = signer.sign(xml_root, key=key_pem, cert=cert_pem,reference_uri="#comprobante")
-
-        # Retornar como string con formato
-        return etree.tostring(signed_xml, pretty_print=True, encoding="utf-8")
-
-    except Exception as e:
-        raise ValueError(f"Error al firmar el XML: {str(e)}")
-
-def load_pkcs12(p12_data, password):
-    private_key, certificate, _ = pkcs12.load_key_and_certificates(
-        p12_data,
-        password.encode(),
-        backend=default_backend()
-    )
-
-    # Serializar certificado en formato PEM
-    cert_pem = certificate.public_bytes(encoding=serialization.Encoding.PEM)
-
-    # Serializar clave privada en formato PEM
-    key_pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption()
-    )
-
-    return key_pem, cert_pem
+        except Exception as e:
+            raise RuntimeError(f"❌ Error durante la generación o firma del XML: {e}")

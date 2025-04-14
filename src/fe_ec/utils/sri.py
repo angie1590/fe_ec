@@ -3,14 +3,12 @@ import zeep
 from zeep.helpers import serialize_object
 from lxml import etree
 from .config import SRI_ENDPOINTS
-import time
 from src.fe_ec.constants import SRI_ENDPOINTS, AMBIENTE, DEFAULT_TIEMPO_ESPERA
 
 class SRIService:
-    def __init__(self, ambiente=AMBIENTE, espera_autorizacion=DEFAULT_TIEMPO_ESPERA, endpoints=None):
+    def __init__(self, ambiente=AMBIENTE, endpoints=None):
         self.ambiente = ambiente
         self.endpoints = endpoints if endpoints else SRI_ENDPOINTS[ambiente]
-        self.tiempo_espera = espera_autorizacion
 
     def enviar_recepcion(self, xml_bytes):
         try:

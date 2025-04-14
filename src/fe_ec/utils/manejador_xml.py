@@ -1,189 +1,67 @@
-# from lxml import etree
-# from typing import Dict
-# from src.fe_ec.utils.firmador_xml import firmar_xml_con_p12
-# from src.fe_ec.constants import XSD_PATH, P12_PATH, P12_PASSWORD
-
-
-# class ManejadorXML:
-#     def __init__(self, xsd_path: str = XSD_PATH):
-#         with open(xsd_path, 'rb') as xsd_file:
-#             self.schema_doc = etree.parse(xsd_file)
-#             self.schema = etree.XMLSchema(self.schema_doc)
-
-#     def dict_a_xml(self, data: Dict, root_tag="factura") -> etree.Element:
-#         def construir_elemento(tag, contenido):
-#             if isinstance(contenido, dict):
-#                 el = etree.Element(tag)
-#                 for k, v in contenido.items():
-#                     child = construir_elemento(k, v)
-#                     if child is not None:
-#                         if isinstance(child, list):
-#                             for sub_child in child:
-#                                 el.append(sub_child)
-#                         else:
-#                             el.append(child)
-#                 return el
-#             elif isinstance(contenido, list):
-#                 elementos = []
-#                 for item in contenido:
-#                     child = construir_elemento(tag, item)
-#                     if child is not None:
-#                         elementos.append(child)
-#                 return elementos
-#             else:
-#                 el = etree.Element(tag)
-#                 el.text = str(contenido)
-#                 return el
-
-#         root = etree.Element(root_tag)  # Sin id
-
-#         for k, v in data.items():
-#             elem = construir_elemento(k, v)
-#             if elem is not None:
-#                 if isinstance(elem, list):
-#                     for sub_elem in elem:
-#                         root.append(sub_elem)
-#                 else:
-#                     root.append(elem)
-
-#         return root
-
-#     def generar_xml(self, json_data: Dict, output_path: str = "salida.xml") -> str:
-#         xml_root = self.dict_a_xml(json_data)
-#         xml_tree = etree.ElementTree(xml_root)
-
-#         if not self.schema.validate(xml_tree):
-#             errores = self.schema.error_log
-#             raise ValueError(f"Errores de validación del XML: {errores}")
-
-#         xml_tree.write(output_path, pretty_print=True, xml_declaration=True, encoding="UTF-8")
-#         return output_path
-
-#     def firmar_y_guardar_xml(
-#         self,
-#         json_data: Dict,
-#         p12_path: str,
-#         p12_password: str,
-#         output_path: str = "fact_firmado.xml"
-#     ) -> str:
-#         try:
-#             # 1. Generar el nodo <factura> a partir del diccionario
-#             factura_element = self.dict_a_xml(json_data)
-
-#             # 2. Envolver dentro del nodo <comprobante id="comprobante">
-#             comprobante = etree.Element("comprobante", id="comprobante")
-#             comprobante.append(factura_element)
-
-#             # 3. Convertir a cadena XML
-#             xml_str = etree.tostring(comprobante, encoding="utf-8").decode("utf-8")
-
-#             # 4. Firmar el XML
-#             from src.fe_ec.utils.firmador_xml import firmar_xml_con_p12
-#             xml_firmado = firmar_xml_con_p12(xml_str, p12_path, p12_password)
-
-#             # 5. Guardar en archivo
-#             with open(output_path, "wb") as f:
-#                 f.write(xml_firmado)
-
-#             return output_path
-
-#         except Exception as e:
-#             raise ValueError(f"❌ Error durante la generación o firma del XML: {e}")
-
-# from lxml import etree
-# from src.fe_ec.utils.firmador_xml import firmar_xml_con_p12
-# from src.fe_ec.constants import XSD_PATH, P12_PATH, P12_PASSWORD
-
-# class ManejadorXML:
-#     def __init__(self, xsd_path: str = XSD_PATH):
-#         self.xsd_path = xsd_path
-
-#     def firmar_y_guardar_xml(
-#         self,
-#         json_data: dict,
-#         p12_path: str = P12_PATH,
-#         p12_password: str = P12_PASSWORD,
-#         output_path: str = "fact_firmado.xml"
-#     ):
-#         xml_str = self.dict_a_xml_string(json_data)
-#         xml_firmado = firmar_xml_con_p12(xml_str, p12_path, p12_password)
-
-#         with open(output_path, "wb") as f:
-#             f.write(xml_firmado)
-
-#         return output_path
-
-#     def dict_a_xml_string(self, data: dict) -> str:
-#         root = self.construir_elemento("factura", data)
-#         root.set("id", "comprobante")
-#         root.set("version", "2.0.0")
-#         return etree.tostring(root, pretty_print=True, encoding="utf-8", xml_declaration=True).decode("utf-8")
-
-#     def construir_elemento(self, tag: str, contenido):
-#         if contenido is None:
-#             return None
-
-#         if isinstance(contenido, dict):
-#             el = etree.Element(tag)
-#             for k, v in contenido.items():
-#                 child = self.construir_elemento(k, v)
-#                 if child is not None:
-#                     el.append(child)
-#             return el
-
-#         elif isinstance(contenido, list):
-#             el = etree.Element(tag)
-#             for item in contenido:
-#                 if isinstance(item, dict):
-#                     # singularizar si el tag termina en 's', ej: detalles → detalle
-#                     singular = tag[:-1] if tag.endswith("s") else tag
-#                     child = etree.Element(singular)
-#                     for k, v in item.items():
-#                         subchild = self.construir_elemento(k, v)
-#                         if subchild is not None:
-#                             child.append(subchild)
-#                     el.append(child)
-#                 else:
-#                     subchild = self.construir_elemento(tag, item)
-#                     if subchild is not None:
-#                         el.append(subchild)
-#             return el
-
-#         else:
-#             el = etree.Element(tag)
-#             el.text = str(contenido)
-#             return el
 from lxml import etree
-from src.fe_ec.utils.firmador_xml import firmar_xml_con_p12
+from src.fe_ec.utils.firmador_xml import FirmadorXML
 from src.fe_ec.constants import XSD_PATH, P12_PATH, P12_PASSWORD
+import os
 
 class ManejadorXML:
     def __init__(self, xsd_path: str = XSD_PATH):
         self.xsd_path = xsd_path
+        self.firmador = FirmadorXML()
 
-    def firmar_y_guardar_xml(
-        self,
-        json_data: dict,
-        p12_path: str = P12_PATH,
-        p12_password: str = P12_PASSWORD,
-        output_path: str = "fact_firmado.xml"
-    ):
-        xml_str = self.dict_a_xml_string(json_data)
-        xml_firmado = firmar_xml_con_p12(xml_str, p12_path, p12_password)
+    def firmar_y_guardar_xml(self, json_data, output_path="fact_firmado.xml"):
+        try:
+            # Paso 1: Generar el XML desde JSON
+            xml_str = self.dict_a_xml_string(json_data)
 
-        with open(output_path, "wb") as f:
-            f.write(xml_firmado)
+            # Paso 2: Guardar temporalmente el XML sin firmar
+            temp_input_path = "temp_no_firmado.xml"
+            with open(temp_input_path, "w", encoding="utf-8") as f:
+                f.write(xml_str)
 
-        return output_path
+            if self.validar_estructura_xml("temp_no_firmado.xml"):
+                # Paso 3: Firmar usando el JAR externo (XAdES-BES)
+                xml_firmado_path = self.firmador.firmar_xml(
+                    xml_path=temp_input_path,
+                    output_path=output_path,
+                    p12_path=P12_PATH,
+                    p12_password=P12_PASSWORD
+                )
 
-    def dict_a_xml_string(self, data: dict) -> str:
+                print(f"✅ XML firmado correctamente en: {xml_firmado_path}")
+                return xml_firmado_path
+            else:
+                return None
+
+        except Exception as e:
+            raise RuntimeError(f"❌ Error durante la generación o firma del XML: {e}")
+        finally:
+            if os.path.exists(temp_input_path):
+                os.remove(temp_input_path)
+
+
+    def dict_a_xml_string(self, data: dict, as_bytes: bool = False):
         root = self.construir_elemento("factura", data)
         root.set("id", "comprobante")
         root.set("version", "2.0.0")
-        return etree.tostring(root, pretty_print=True, encoding="utf-8", xml_declaration=True).decode("utf-8")
+
+        if "infoAdicional" in data:
+            info_add = self.construir_info_adicional(data["infoAdicional"])
+            root.append(info_add)
+
+        xml = etree.tostring(
+            root,
+            pretty_print=True,
+            encoding="utf-8",
+            xml_declaration=True
+        )
+        return xml if as_bytes else xml.decode("utf-8")
 
     def construir_elemento(self, tag: str, contenido):
         if contenido is None:
+            return None
+
+        # ⛔ Evitamos procesar infoAdicional aquí, ya se maneja por separado
+        if tag == "infoAdicional":
             return None
 
         if isinstance(contenido, dict):
@@ -198,20 +76,60 @@ class ManejadorXML:
             return el
 
         elif isinstance(contenido, list):
-            elementos = []
+            sin_contenedor = {"detalle", "impuesto", "totalImpuesto", "pago"}
+            if tag in sin_contenedor:
+                elementos = []
+                for item in contenido:
+                    child = self.construir_elemento(tag, item)
+                    if child is not None:
+                        elementos.append(child)
+                return elementos
+
+            el = etree.Element(tag)
+            singular = tag[:-1] if tag.endswith("s") else tag
             for item in contenido:
-                child = etree.Element(tag)
+                child = etree.Element(singular)
                 for k, v in item.items():
                     subchild = self.construir_elemento(k, v)
-                    if isinstance(subchild, list):
-                        for s in subchild:
-                            child.append(s)
-                    elif subchild is not None:
+                    if subchild is not None:
                         child.append(subchild)
-                elementos.append(child)
-            return elementos
+                el.append(child)
+            return el
 
         else:
             el = etree.Element(tag)
             el.text = str(contenido)
             return el
+
+    def construir_info_adicional(self, datos):
+        el = etree.Element("infoAdicional")
+        for campo in datos.get("campoAdicional", []):
+            campo_el = etree.Element("campoAdicional")
+            campo_el.set("nombre", campo["nombre"])
+            campo_el.text = campo["valor"]
+            el.append(campo_el)
+        return el
+
+
+    def validar_estructura_xml(self, xml_path: str) -> bool:
+        """
+        Valida el XML generado contra el XSD oficial del SRI, removiendo temporalmente
+        la firma digital para evitar errores de validación estructural.
+        """
+
+        try:
+            schema = etree.XMLSchema(etree.parse(self.xsd_path))
+            parser = etree.XMLParser(remove_blank_text=True)
+            tree = etree.parse(xml_path, parser)
+
+            ns = {'ds': 'http://www.w3.org/2000/09/xmldsig#'}
+            signature = tree.find('.//ds:Signature', namespaces=ns)
+            if signature is not None:
+                signature.getparent().remove(signature)
+
+            schema.assertValid(tree)
+            return True
+        except etree.DocumentInvalid as e:
+            print("❌ XML inválido según el XSD:", e)
+            return False
+
