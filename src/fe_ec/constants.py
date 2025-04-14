@@ -11,7 +11,7 @@ SRI_ENDPOINTS = {
     }
 }
 
-XSD_PATH = "sri_docs/factura_V2.xsd"
+XSD_PATH = "sri_docs/factura_V1_1.xsd"
 P12_PATH = "firma.p12"
 P12_PASSWORD = "Angie1590"  # En producción usar variable de entorno
 AMBIENTE = "pruebas"

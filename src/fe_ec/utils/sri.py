@@ -3,12 +3,12 @@ import zeep
 from zeep.helpers import serialize_object
 from lxml import etree
 from .config import SRI_ENDPOINTS
-from src.fe_ec.constants import SRI_ENDPOINTS, AMBIENTE, DEFAULT_TIEMPO_ESPERA
+from src.fe_ec.constants import SRI_ENDPOINTS, AMBIENTE
 
 class SRIService:
-    def __init__(self, ambiente=AMBIENTE, endpoints=None):
-        self.ambiente = ambiente
-        self.endpoints = endpoints if endpoints else SRI_ENDPOINTS[ambiente]
+    def __init__(self):
+        self.ambiente = AMBIENTE
+        self.endpoints = SRI_ENDPOINTS[AMBIENTE]
 
     def enviar_recepcion(self, xml_bytes):
         try:

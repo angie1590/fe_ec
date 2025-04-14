@@ -5,17 +5,13 @@ from src.fe_ec.utils.generador_clave_acceso import GeneradorClaveAcceso
 
 
 def main():
-    xsd_path = "sri_docs/factura_V1_1.xsd"
-    p12_path = "firma.p12"
-    p12_password = "Angie1590"
-
     clave_generada = GeneradorClaveAcceso.generar(
         fecha_emision="14/04/2025",
         tipo_comprobante="01",
         ruc="0104815956001",
         tipo_ambiente="1",
         serie="001001",
-        secuencial="000000019",
+        secuencial="000000020",
         tipo_emision="1"
     )
     print(clave_generada)
@@ -30,7 +26,7 @@ def main():
             "codDoc": "01",
             "estab": "001",
             "ptoEmi": "001",
-            "secuencial": "000000019",
+            "secuencial": "000000020",
             "dirMatriz": "Av. Principal 123"
         },
         "infoFactura": {
@@ -94,13 +90,13 @@ def main():
 
 
     try:
-        manejador = ManejadorXML(xsd_path)
+        manejador = ManejadorXML()
         # 1. Generar XML sin firmar
         #with open("factura_temp.xml", "wb") as f:
         #    f.write(manejador.dict_a_xml_string(datos_factura, as_bytes=True))
         if manejador.firmar_y_guardar_xml(datos_factura) != None:
             print("Estructura válida, listo para firmar y enviar.")
-            sri = SRIService(ambiente="pruebas", espera_autorizacion=7)
+            sri = SRIService()
 
             # 1. Enviar XML firmado a recepción
             with open("fact_firmado.xml", "rb") as f:
