@@ -11,7 +11,7 @@ def main():
         ruc="0104815956001",
         tipo_ambiente="1",
         serie="001001",
-        secuencial="000000020",
+        secuencial="000000024",
         tipo_emision="1"
     )
     print(clave_generada)
@@ -20,13 +20,13 @@ def main():
             "ambiente": "1",
             "tipoEmision": "1",
             "razonSocial": "PRUEBAS SERVICIO DE RENTAS INTERNA",
-            #"nombreComercial": "MiComercio",
+            "nombreComercial": "MiComercio",
             "ruc": "0104815956001",
             "claveAcceso": clave_generada,
             "codDoc": "01",
             "estab": "001",
             "ptoEmi": "001",
-            "secuencial": "000000020",
+            "secuencial": "000000024",
             "dirMatriz": "Av. Principal 123"
         },
         "infoFactura": {
@@ -36,7 +36,7 @@ def main():
             "tipoIdentificacionComprador": "04",
             "razonSocialComprador": "PRUEBAS SERVICIO DE RENTAS INTERNA",
             "identificacionComprador": "0195125988001",
-            #"direccionComprador": "Guapondelig",
+            "direccionComprador": "Guapondelig",
             "totalSinImpuestos": "100.00",
             "totalDescuento": "0.00",
             "totalConImpuestos": {
@@ -91,9 +91,6 @@ def main():
 
     try:
         manejador = ManejadorXML()
-        # 1. Generar XML sin firmar
-        #with open("factura_temp.xml", "wb") as f:
-        #    f.write(manejador.dict_a_xml_string(datos_factura, as_bytes=True))
         if manejador.firmar_y_guardar_xml(datos_factura) != None:
             print("Estructura válida, listo para firmar y enviar.")
             sri = SRIService()
@@ -109,23 +106,19 @@ def main():
             if respuesta_recepcion.estado == "RECIBIDA":
                 print("✅ Comprobante recibido. Consultando autorización...")
 
-                respuesta_autorizacion = sri.consultar_autorizacion(clave_generada)
-                print("📄 Respuesta de autorización del SRI:")
-                print(json.dumps(respuesta_autorizacion, indent=2))
+                respuesta = sri.consultar_autorizacion(clave_generada)
 
-                numero = respuesta_autorizacion.get("numero_autorizacion")
-                fecha = respuesta_autorizacion.get("fecha_autorizacion")
-                xml_aut = respuesta_autorizacion.get("xml_autorizado")
+                # Puedes inspeccionar directamente la respuesta
+                print("📦 Respuesta bruta del SRI:", respuesta)
 
-                print("Número:", numero or "—")
-                print("Fecha :", fecha or "—")
-
-                if xml_aut:
-                    with open("autorizado.xml", "w", encoding="utf-8") as f:
-                        f.write(xml_aut)
-                    print("✅ XML autorizado guardado como autorizado.xml")
+                # Acceso directo a campos:
+                if hasattr(respuesta, "autorizaciones") and respuesta.autorizaciones and respuesta.autorizaciones.autorizacion:
+                    autorizacion = respuesta.autorizaciones.autorizacion[0]
+                    print("✅ Número de autorización:", autorizacion.numeroAutorizacion)
+                    print("🕒 Fecha:", autorizacion.fechaAutorizacion)
                 else:
-                    print("⚠️ El SRI no devolvió el XML autorizado. Puede que el comprobante aún no esté autorizado.")
+                    print("❌ No autorizado.")
+                    print(autorizacion.mensajes)
         else:
             print("Hay errores en la estructura del XML. No se puede firmar")
 
