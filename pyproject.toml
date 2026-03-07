@@ -6,9 +6,15 @@ authors = ["OpenLatina  <openlatina.cue@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/angie1590/fe_ec.git"
 keywords = ["facturación electrónica", "Ecuador", "SRI", "firma digital"]
+packages = [{ include = "fe_ec", from = "src" }]
+exclude = ["src/fe_ec/constants_copy.py"]
+include = [
+  { path = "src/fe_ec/utils/FirmaElectronica/**" },
+  { path = "src/fe_ec/schemas/**" }
+]
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<3.11"
+python = ">=3.10,<3.12"
 lxml = ">=5.2.1,<6.0"
 xmlschema = "^3.4.3"
 zeep = "^4.3.1"

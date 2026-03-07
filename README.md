@@ -1,98 +1,125 @@
-# Facturación Electrónica Ecuador (SRI) - Librería Python
+# fe_ec_lib 📎
 
-Este proyecto proporciona una librería en Python para la **generación, firma electrónica y envío** de comprobantes electrónicos (facturas) al **Servicio de Rentas Internas del Ecuador (SRI)**.
+Librería en Python para generar, firmar digitalmente y enviar comprobantes electrónicos al SRI (Ecuador), incluyendo la consulta y validación de autorizaciones. Esta librería está basada en los esquemas XSD oficiales del SRI y firmada bajo el estándar XAdES-BES.
 
-Incluye:
-- Generación de la estructura XML basada en la ficha técnica 2.2.6
-- Firma electrónica usando un JAR externo
-- Envio del comprobante al **Web Service de Recepción**
-- Consulta posterior al **Web Service de Autorización**
+## ⚡ Características
 
-## 📊 Requisitos
+- Generación de clave de acceso según estructura oficial.
+- Construcción y validación de XML contra esquema XSD.
+- Firma digital XAdES-BES usando certificados .p12.
+- Envió a los servicios web del SRI (recepción y autorización).
+- Adaptado para funcionar como librería externa y reutilizable.
 
-### Python
-- Python 3.8 - 3.10 recomendado
-- Librerías:
-  - `lxml`
-  - `xmlschema`
-  - `zeep`
-  - `cryptography <= 40`
-  - `poetry` para la gestión del entorno y dependencias
+---
 
-### Java
-- Java 8 obligatorio
-- `FirmaElectronica.jar` debe estar ubicado en `utils/`
-- Instalar Java 8 y asegurarse de que `java -version` muestra `1.8.*`
+## 📂 Instalación
 
-### Dependencias adicionales
-Instala Poetry si no lo tienes:
 ```bash
-pipx install poetry
+pip install fe-ec-lib
 ```
 
-Instala las dependencias:
+Si estás trabajando con el repositorio directamente:
 ```bash
 poetry install
 ```
 
-Activa el entorno:
-```bash
-poetry shell
+---
+
+## 🔧 Uso básico
+
+```python
+import os
+
+os.environ["FEEC_P12_PATH"] = "firma.p12"
+os.environ["FEEC_P12_PASSWORD"] = "123456"
+os.environ["FEEC_AMBIENTE"] = "1"
+
+from fe_ec.utils.manejador_xml import ManejadorXML
+
+manejador = ManejadorXML()
+manejador.firmar_y_guardar_xml(datos_factura, output_path="fact_firmado.xml")
 ```
 
-## 📝 Estructura del Proyecto
+
+---
+
+## 📁 Estructura del Proyecto
 
 ```
-.
+fe_ec_lib/
 ├── src/
-│   ├── fe_ec/
-│       ├── utils/
-│       │   ├── manejador_xml.py
-│       │   ├── firmador_xml.py
-│       │   ├── sri.py
-│       │   ├── config.py
-│       │   ├── constants.py
-│       │   └── FirmaElectronica.jar
-│       └── __init__.py
-└── test.py
+│   └── fe_ec/
+│       ├── constants.py
+│       └── utils/
+│           ├── firmador_xml.py
+│           ├── sri.py
+│           ├── manejador_xml.py
+│           ├── generador_clave_acceso.py
+│           └── FirmaElectronica/
+├── tests/
+│   └── test_*.py
+├── README.md
+├── pyproject.toml
 ```
 
-## ✅ Uso Rápido
+> Los archivos de prueba (`test.py`, `firma.p12`, etc.) **no se incluyen** en el empaquetado.
+
+
+---
+
+## 🔐 Configuración
+
+La librería toma su configuración desde variables de entorno:
+
+- `FEEC_P12_PATH`: Ruta al archivo `.p12`.
+- `FEEC_P12_PASSWORD`: Contraseña del archivo.
+- `FEEC_XSD_PATH`: Opcional. Ruta al esquema XML del SRI si quieres sobrescribir el XSD empaquetado.
+- `FEEC_AMBIENTE`: `pruebas`, `produccion`, `1` o `2`.
+- `FEEC_JAVA_BIN`: Opcional, binario de Java a usar si no quieres depender de `PATH`.
+
+
+---
+
+## ✅ Validaciones compatibles
+
+- Facturas electrónicas (codDoc = 01)
+- Firma digital según XAdES-BES
+- Validación por XSD 2.2.6 SRI
+
+
+---
+
+## 🧱 Requisitos
+
+- Python 3.10 - 3.11
+- Java 8 recomendado. Con Java 9+ la librería aplica flags de compatibilidad automáticamente.
+- Dependencias gestionadas con Poetry
+
+
+---
+
+## 📤 Compilación de la librería
 
 ```bash
-poetry run python test.py
+poetry build
 ```
 
-El archivo `test.py` incluye la generación de una factura con 4 productos distintos (gravado, exento, no IVA, ICE + IVA), la firma del XML y el envío al SRI.
+Esto generará el archivo `.whl` que podrá ser usado en otros proyectos.
 
-## 🔐 Firma Electrónica
-La firma se realiza ejecutando el archivo `FirmaElectronica.jar`. Asegúrese de que Java 8 esté instalado y accesible desde el entorno. La clave del archivo `.p12` se configura en `config.py`.
+---
 
-## 🌐 Web Services SRI
-- Recepción: `https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl`
-- Autorización: `https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl`
+## 📣 Contribuciones
 
-Se usan los servicios del **ambiente de pruebas**, puede cambiarse a producción modificando la variable `AMBIENTE`.
+Pull requests, mejoras y correcciones son bienvenidas. Por favor asegúrate de pasar los tests:
+```bash
+pytest
+```
 
-## 🔹 Parametrización
-Todos los valores sensibles (ruta del .p12, clave, ambiente, URLs de WS) pueden configurarse en `config.py` o desde un `YAML` externo.
 
-## 🔧 Validación con XSD
-Antes de firmar se realiza validación del XML contra el esquema `factura_V2.xsd` del SRI. Si el XML no cumple, se aborta la firma.
+---
 
-## ☑️ Consideraciones
-- Todas las fechas deben estar en formato `dd/mm/yyyy`
-- Las cantidades y precios deben tener precisión hasta 2 decimales
-- Se deben incluir los códigos de impuestos correctos para IVA, ICE, etc.
-
-## 🚀 Futuras mejoras
-- Empaquetado como PyPI package
-- Validación contra XSD de notas de crédito, retenciones, etc.
-- Frontend web para ingreso y emisión de comprobantes
-
-## 📱 Contacto
+## 📞 Contacto
 
 **OpenLatina**
 📞 0984228883
 📞 0995767370
-

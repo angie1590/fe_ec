@@ -169,3 +169,14 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# macOS artifacts
+.DS_Store
+
+# Local electronic document artifacts / secrets
+*.p12
+fact_firmado.xml
+temp_*.xml
+
+# Local backup copies
+src/fe_ec/constants_copy.py

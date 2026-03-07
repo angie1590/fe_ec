@@ -1,9 +1,5 @@
 from zeep import Client
-import zeep
-from zeep.helpers import serialize_object
-from lxml import etree
-from .config import SRI_ENDPOINTS
-from src.fe_ec.constants import SRI_ENDPOINTS, AMBIENTE
+from fe_ec.constants import SRI_ENDPOINTS, AMBIENTE
 
 class SRIService:
     def __init__(self):

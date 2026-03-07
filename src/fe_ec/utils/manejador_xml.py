@@ -1,12 +1,20 @@
 from lxml import etree
-from src.fe_ec.utils.firmador_xml import FirmadorXML
-from src.fe_ec.constants import XSD_PATH, P12_PATH, P12_PASSWORD
+from fe_ec.utils.firmador_xml import FirmadorXML
+from fe_ec.constants import XSD_PATH, P12_PATH, P12_PASSWORD
 import os
 
 class ManejadorXML:
-    def __init__(self, xsd_path: str = XSD_PATH):
-        self.xsd_path = xsd_path
-        self.firmador = FirmadorXML()
+    def __init__(
+        self,
+        xsd_path: str | None = None,
+        p12_path: str | None = None,
+        p12_password: str | None = None,
+        firmador: FirmadorXML | None = None,
+    ):
+        self.xsd_path = xsd_path or XSD_PATH
+        self.p12_path = p12_path or P12_PATH
+        self.p12_password = p12_password if p12_password is not None else P12_PASSWORD
+        self.firmador = firmador or FirmadorXML()
 
     def firmar_y_guardar_xml(self, json_data, output_path="fact_firmado.xml"):
         try:
@@ -23,8 +31,8 @@ class ManejadorXML:
                 xml_firmado_path = self.firmador.firmar_xml(
                     xml_path=temp_input_path,
                     output_path=output_path,
-                    p12_path=P12_PATH,
-                    p12_password=P12_PASSWORD
+                    p12_path=self.p12_path,
+                    p12_password=self.p12_password
                 )
 
                 print(f"✅ XML firmado correctamente en: {xml_firmado_path}")
@@ -32,6 +40,8 @@ class ManejadorXML:
             else:
                 return None
 
+        except RuntimeError:
+            raise
         except Exception as e:
             raise RuntimeError(f"❌ Error durante la generación o firma del XML: {e}")
         finally:
@@ -132,4 +142,3 @@ class ManejadorXML:
         except etree.DocumentInvalid as e:
             print("❌ XML inválido según el XSD:", e)
             return False
-
