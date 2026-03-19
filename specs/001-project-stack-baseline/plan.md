@@ -104,9 +104,6 @@ dist/
 ├── fe_ec-0.1.0-py3-none-any.whl
 └── fe_ec-0.1.0.tar.gz
 
-sri_docs/
-└── factura_V1_1.xsd
-
 test.py
 test2.py
 pytest.py
