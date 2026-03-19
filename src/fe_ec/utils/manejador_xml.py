@@ -5,6 +5,7 @@ from pathlib import Path
 from lxml import etree
 
 from fe_ec.constants import (
+    DEFAULT_XMLDSIG_XSD_PATH,
     P12_PASSWORD,
     P12_PATH,
     ROOT_TAG_TO_DOCUMENT_TYPE,
@@ -12,6 +13,16 @@ from fe_ec.constants import (
     infer_document_type,
 )
 from fe_ec.utils.firmador_xml import FirmadorXML
+
+
+class _SchemaImportResolver(etree.Resolver):
+    def resolve(self, system_url, public_id, context):
+        if Path(system_url).name != "xmldsig-core-schema.xsd":
+            return None
+        xmldsig_path = Path(DEFAULT_XMLDSIG_XSD_PATH)
+        if not xmldsig_path.exists():
+            return None
+        return self.resolve_filename(str(xmldsig_path), context)
 
 
 class ManejadorXML:
@@ -162,7 +173,9 @@ class ManejadorXML:
                     f"No se encontro el XSD configurado para {config['root_tag']}: {xsd_path}"
                 )
 
-            schema = etree.XMLSchema(etree.parse(str(xsd_path)))
+            xsd_parser = etree.XMLParser(remove_blank_text=True)
+            xsd_parser.resolvers.add(_SchemaImportResolver())
+            schema = etree.XMLSchema(etree.parse(str(xsd_path), parser=xsd_parser))
 
             ns = {"ds": "http://www.w3.org/2000/09/xmldsig#"}
             signature = tree.find(".//ds:Signature", namespaces=ns)

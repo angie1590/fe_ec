@@ -22,17 +22,52 @@ _ENVIRONMENT_ALIASES = {
 SCHEMAS_DIR = Path(__file__).resolve().parent / "schemas"
 
 
-def _discover_packaged_schema(filename: str, fallback: str) -> Path:
-    matches = sorted(SCHEMAS_DIR.rglob(filename))
+def _schema_path(*relative_parts: str) -> Path:
+    return SCHEMAS_DIR.joinpath(*relative_parts)
+
+
+def _discover_schema(*candidates: tuple[str, ...]) -> Path:
+    for candidate in candidates:
+        path = _schema_path(*candidate)
+        if path.exists():
+            return path
+
+    filenames = {candidate[-1] for candidate in candidates if candidate}
+    matches: list[Path] = []
+    for filename in filenames:
+        matches.extend(sorted(SCHEMAS_DIR.rglob(filename)))
     if matches:
-        return matches[0]
-    return SCHEMAS_DIR / fallback
+        return sorted(matches)[0]
+
+    if not candidates:
+        raise ValueError("Debe especificar al menos un candidato de XSD.")
+    return _schema_path(*candidates[0])
 
 
-DEFAULT_FACTURA_XSD_PATH = SCHEMAS_DIR / "factura_V1_1.xsd"
-DEFAULT_RETENCION_XSD_PATH = _discover_packaged_schema(
-    "ComprobanteRetencion_V2.0.0.xsd",
-    "retencion_ats_v2_0_0.xsd",
+DEFAULT_XMLDSIG_XSD_PATH = _discover_schema(
+    ("Retencion", "xmldsig-core-schema.xsd"),
+)
+DEFAULT_FACTURA_XSD_PATH = _discover_schema(
+    ("Factura", "factura_V1.1.0.xsd"),
+    ("Factura", "factura_V2.1.0.xsd"),
+)
+DEFAULT_RETENCION_XSD_PATH = _discover_schema(
+    ("Retencion", "ComprobanteRetencion_V2.0.0.xsd"),
+)
+DEFAULT_NOTA_CREDITO_XSD_PATH = _discover_schema(
+    ("Nota de Credito", "NotaCredito_V1.1.0.xsd"),
+    ("Nota de Credito", "NotaCredito_V1.0.0.xsd"),
+)
+DEFAULT_NOTA_DEBITO_XSD_PATH = _discover_schema(
+    ("Nota de Debito", "NotaDebito_V1.0.0.xsd"),
+)
+DEFAULT_GUIA_REMISION_XSD_PATH = _discover_schema(
+    ("Guia de Remision", "GuiaRemision_V1.1.0.xsd"),
+    ("Guia de Remision", "GuiaRemision_V1.0.0.xsd"),
+)
+DEFAULT_LIQUIDACION_COMPRA_XSD_PATH = _discover_schema(
+    ("Liquidacion", "LiquidacionCompra_V1.1.0.xsd"),
+    ("Liquidacion", "LiquidacionCompra_V1.0.0.xsd"),
 )
 
 
@@ -62,6 +97,22 @@ FACTURA_XSD_PATH = _resolve_xsd_path(
 RETENCION_XSD_PATH = _resolve_xsd_path(
     "FEEC_RETENCION_XSD_PATH",
     default=DEFAULT_RETENCION_XSD_PATH,
+)
+NOTA_CREDITO_XSD_PATH = _resolve_xsd_path(
+    "FEEC_NOTA_CREDITO_XSD_PATH",
+    default=DEFAULT_NOTA_CREDITO_XSD_PATH,
+)
+NOTA_DEBITO_XSD_PATH = _resolve_xsd_path(
+    "FEEC_NOTA_DEBITO_XSD_PATH",
+    default=DEFAULT_NOTA_DEBITO_XSD_PATH,
+)
+GUIA_REMISION_XSD_PATH = _resolve_xsd_path(
+    "FEEC_GUIA_REMISION_XSD_PATH",
+    default=DEFAULT_GUIA_REMISION_XSD_PATH,
+)
+LIQUIDACION_COMPRA_XSD_PATH = _resolve_xsd_path(
+    "FEEC_LIQUIDACION_COMPRA_XSD_PATH",
+    default=DEFAULT_LIQUIDACION_COMPRA_XSD_PATH,
 )
 
 # Legacy aliases preserved for the current factura flow.
@@ -128,6 +179,86 @@ DOCUMENT_METADATA = {
             "retencion",
             "reembolsoDetalle",
             "detalleImpuesto",
+            "campoAdicional",
+        },
+    },
+    "nota_credito": {
+        "cod_doc": "04",
+        "root_tag": "notaCredito",
+        "xml_version": "1.1.0",
+        "xsd_path": NOTA_CREDITO_XSD_PATH,
+        "required_blocks": ("infoTributaria", "infoNotaCredito", "detalles"),
+        "tag_aliases": {},
+        "container_item_map": {
+            "detalles": "detalle",
+            "impuestos": "impuesto",
+            "detallesAdicionales": "detAdicional",
+        },
+        "repeated_item_tags": {
+            "detalle",
+            "impuesto",
+            "campoAdicional",
+            "detAdicional",
+        },
+    },
+    "nota_debito": {
+        "cod_doc": "05",
+        "root_tag": "notaDebito",
+        "xml_version": "1.0.0",
+        "xsd_path": NOTA_DEBITO_XSD_PATH,
+        "required_blocks": ("infoTributaria", "infoNotaDebito", "motivos"),
+        "tag_aliases": {},
+        "container_item_map": {
+            "impuestos": "impuesto",
+            "pagos": "pago",
+            "motivos": "motivo",
+        },
+        "repeated_item_tags": {
+            "impuesto",
+            "pago",
+            "motivo",
+            "campoAdicional",
+        },
+    },
+    "guia_remision": {
+        "cod_doc": "06",
+        "root_tag": "guiaRemision",
+        "xml_version": "1.1.0",
+        "xsd_path": GUIA_REMISION_XSD_PATH,
+        "required_blocks": ("infoTributaria", "infoGuiaRemision", "destinatarios"),
+        "tag_aliases": {},
+        "container_item_map": {
+            "destinatarios": "destinatario",
+            "detalles": "detalle",
+        },
+        "repeated_item_tags": {
+            "destinatario",
+            "detalle",
+            "campoAdicional",
+        },
+    },
+    "liquidacion_compra": {
+        "cod_doc": "03",
+        "root_tag": "liquidacionCompra",
+        "xml_version": "1.1.0",
+        "xsd_path": LIQUIDACION_COMPRA_XSD_PATH,
+        "required_blocks": (
+            "infoTributaria",
+            "infoLiquidacionCompra",
+            "detalles",
+        ),
+        "tag_aliases": {},
+        "container_item_map": {
+            "pagos": "pago",
+            "detalles": "detalle",
+            "impuestos": "impuesto",
+            "detallesAdicionales": "detAdicional",
+        },
+        "repeated_item_tags": {
+            "pago",
+            "detalle",
+            "impuesto",
+            "detAdicional",
             "campoAdicional",
         },
     },
