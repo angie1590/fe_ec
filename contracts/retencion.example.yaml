@@ -4,7 +4,7 @@ retencion:
   fecha_emision: "14/03/2026"
   secuencial: "000000123"
   tipo_emision: "1"
-  output_xml: "retencion_firmada.xml"
+  output_xml: ".artifacts/xml/retencion.example.xml"
 
   emisor:
     ruc: "0103523908001"

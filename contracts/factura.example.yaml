@@ -4,7 +4,7 @@ factura:
   fecha_emision: "17/03/2026"
   secuencial: "000000123"
   tipo_emision: "1"
-  output_xml: "fact_firmado.xml"
+  output_xml: ".artifacts/xml/factura.example.xml"
   moneda: "DOLAR"
 
   emisor:

@@ -6,12 +6,12 @@ from src.fe_ec.utils.generador_clave_acceso import GeneradorClaveAcceso
 
 def main():
     clave_generada = GeneradorClaveAcceso.generar(
-        fecha_emision="14/04/2025",
+        fecha_emision="13/03/2026",
         tipo_comprobante="01",
-        ruc="0104815956001",
+        ruc="0103523908001",
         tipo_ambiente="1",
         serie="001001",
-        secuencial="000000024",
+        secuencial="000000027",
         tipo_emision="1"
     )
     print(clave_generada)
@@ -21,16 +21,16 @@ def main():
             "tipoEmision": "1",
             "razonSocial": "PRUEBAS SERVICIO DE RENTAS INTERNA",
             "nombreComercial": "MiComercio",
-            "ruc": "0104815956001",
+            "ruc": "0103523908001",
             "claveAcceso": clave_generada,
             "codDoc": "01",
             "estab": "001",
             "ptoEmi": "001",
-            "secuencial": "000000024",
+            "secuencial": "000000025",
             "dirMatriz": "Av. Principal 123"
         },
         "infoFactura": {
-            "fechaEmision": "14/04/2025",
+            "fechaEmision": "13/03/2026",
             "dirEstablecimiento": "Av. Secundaria 456",
             "obligadoContabilidad": "NO",
             "tipoIdentificacionComprador": "04",

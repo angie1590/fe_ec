@@ -1,7 +1,7 @@
 version: 1
 
 retencion:
-  output_xml: "retencion_factura_6.xml"
+  output_xml: ".artifacts/xml/retencion.factura_6.xml"
 
   emisor:
     ruc: "0103523908001"

@@ -37,7 +37,10 @@ os.environ["FEEC_AMBIENTE"] = "1"
 from fe_ec.utils.manejador_xml import ManejadorXML
 
 manejador = ManejadorXML()
-manejador.firmar_y_guardar_xml(datos_factura, output_path="fact_firmado.xml")
+manejador.firmar_y_guardar_xml(
+    datos_factura,
+    output_path=".artifacts/xml/fact_firmado.xml",
+)
 ```
 
 Si prefieres no construir el payload de factura a mano, puedes usar un contrato
@@ -53,7 +56,10 @@ Para comprobantes de retencion ATS (`codDoc = 07`):
 from fe_ec.utils.manejador_xml import ManejadorXML
 
 manejador = ManejadorXML(document_type="retencion")
-manejador.firmar_y_guardar_xml(datos_retencion, output_path="retencion_firmada.xml")
+manejador.firmar_y_guardar_xml(
+    datos_retencion,
+    output_path=".artifacts/xml/retencion_firmada.xml",
+)
 ```
 
 Si prefieres no pasar decenas de variables de entorno para una retencion, puedes
@@ -64,6 +70,8 @@ poetry run python test_retencion.py --contract contracts/retencion.example.yaml
 ```
 
 El contrato de ejemplo vive en [contracts/retencion.example.yaml](/Users/andrea/Documents/Proyectos/fe_ec/contracts/retencion.example.yaml).
+Por defecto, los scripts de prueba dejan sus XML firmados en `.artifacts/xml/`,
+que está ignorado por git.
 
 
 ---

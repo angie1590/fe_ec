@@ -27,9 +27,10 @@ FECHA_EMISION = os.getenv(
     (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y"),
 )
 TIPO_EMISION = os.getenv("FEEC_TIPO_EMISION", "1")
+DEFAULT_OUTPUT_XML = ".artifacts/xml/fact_firmado.xml"
 OUTPUT_XML = os.getenv(
     "FEEC_OUTPUT_FACTURA_XML",
-    os.getenv("FEEC_OUTPUT_XML", "fact_firmado.xml"),
+    os.getenv("FEEC_OUTPUT_XML", DEFAULT_OUTPUT_XML),
 )
 AMBIENTE_NORMALIZADO = normalizar_ambiente(os.getenv("FEEC_AMBIENTE", "1"))
 TIPO_AMBIENTE = {"pruebas": "1", "produccion": "2"}[AMBIENTE_NORMALIZADO]

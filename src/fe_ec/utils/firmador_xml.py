@@ -99,6 +99,9 @@ class FirmadorXML:
         :param p12_password: Contraseña del archivo .p12.
         :return: Ruta del archivo XML firmado.
         """
+        output_parent = Path(output_path).expanduser().resolve().parent
+        output_parent.mkdir(parents=True, exist_ok=True)
+
         cmd = self._build_command(xml_path, output_path, p12_path, p12_password)
 
         result = subprocess.run(cmd, capture_output=True, text=True)

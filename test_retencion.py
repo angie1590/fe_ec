@@ -35,7 +35,8 @@ FECHA_EMISION = os.getenv(
     (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y"),
 )
 TIPO_EMISION = os.getenv("FEEC_TIPO_EMISION", "1")
-OUTPUT_XML = os.getenv("FEEC_OUTPUT_RETENCION_XML", "retencion_firmada.xml")
+DEFAULT_OUTPUT_XML = ".artifacts/xml/retencion_firmada.xml"
+OUTPUT_XML = os.getenv("FEEC_OUTPUT_RETENCION_XML", DEFAULT_OUTPUT_XML)
 AMBIENTE_NORMALIZADO = normalizar_ambiente(os.getenv("FEEC_AMBIENTE", "pruebas"))
 TIPO_AMBIENTE = {"pruebas": "1", "produccion": "2"}[AMBIENTE_NORMALIZADO]
 SERIE = f"{ESTAB}{PTO_EMI}"

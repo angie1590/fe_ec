@@ -22,7 +22,7 @@ retencion:
   fecha_emision: "16/03/2026"
   secuencial: "000000123"
   tipo_emision: "1"
-  output_xml: "retencion_firmada.xml"
+  output_xml: ".artifacts/xml/retencion.template.xml"
 
   emisor:
     # Normalmente estos datos cambian poco.
