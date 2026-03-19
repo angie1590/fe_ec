@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xsd:simpleType name="ambienteType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[12]"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="tipoEmisionType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[12]"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="rucType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{13}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="claveAccesoType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{49}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="codDocRetencionType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="07"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="codigoEstablecimientoType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{3}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="secuencialType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{9}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="fechaType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/20[0-9]{2}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="periodoFiscalType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="(0[1-9]|1[0-2])/20[0-9]{2}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="documentoSustentoType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{3}-[0-9]{3}-[0-9]{1,9}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="decimal2Type">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:totalDigits value="14"/>
+            <xsd:fractionDigits value="2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="decimal6Type">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:totalDigits value="16"/>
+            <xsd:fractionDigits value="6"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="texto300Type">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="300"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="texto50Type">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="50"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="texto25Type">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="25"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="texto20Type">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="20"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="textoLargoType">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="49"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="tipoRelacionType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="SI"/>
+            <xsd:enumeration value="NO"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="infoTributariaType">
+        <xsd:sequence>
+            <xsd:element name="ambiente" type="ambienteType"/>
+            <xsd:element name="tipoEmision" type="tipoEmisionType"/>
+            <xsd:element name="razonSocial" type="texto300Type"/>
+            <xsd:element name="nombreComercial" type="texto300Type" minOccurs="0"/>
+            <xsd:element name="ruc" type="rucType"/>
+            <xsd:element name="claveAcceso" type="claveAccesoType"/>
+            <xsd:element name="codDoc" type="codDocRetencionType"/>
+            <xsd:element name="estab" type="codigoEstablecimientoType"/>
+            <xsd:element name="ptoEmi" type="codigoEstablecimientoType"/>
+            <xsd:element name="secuencial" type="secuencialType"/>
+            <xsd:element name="dirMatriz" type="texto300Type"/>
+            <xsd:element name="agenteRetencion" type="texto20Type" minOccurs="0"/>
+            <xsd:element name="contribuyenteRimpe" type="texto50Type" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="infoCompRetencionType">
+        <xsd:sequence>
+            <xsd:element name="fechaEmision" type="fechaType"/>
+            <xsd:element name="dirEstablecimiento" type="texto300Type" minOccurs="0"/>
+            <xsd:element name="contribuyenteEspecial" type="texto20Type" minOccurs="0"/>
+            <xsd:element name="obligadoContabilidad" type="tipoRelacionType" minOccurs="0"/>
+            <xsd:element name="tipoIdentificacionSujetoRetenido" type="texto25Type"/>
+            <xsd:element name="parteRel" type="tipoRelacionType"/>
+            <xsd:element name="razonSocialSujetoRetenido" type="texto300Type"/>
+            <xsd:element name="identificacionSujetoRetenido" type="texto25Type"/>
+            <xsd:element name="periodoFiscal" type="periodoFiscalType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="impuestoDocSustentoType">
+        <xsd:sequence>
+            <xsd:element name="codImpuestoDocSustento" type="texto25Type"/>
+            <xsd:element name="codigoPorcentaje" type="texto25Type"/>
+            <xsd:element name="baseImponible" type="decimal2Type"/>
+            <xsd:element name="tarifa" type="decimal6Type"/>
+            <xsd:element name="valorImpuesto" type="decimal2Type"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="dividendosType">
+        <xsd:sequence>
+            <xsd:element name="fechaPagoDiv" type="fechaType"/>
+            <xsd:element name="imRentaSoc" type="decimal2Type"/>
+            <xsd:element name="ejerFisUtDiv" type="texto25Type"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="compraCajBananoType">
+        <xsd:sequence>
+            <xsd:element name="numCajBan" type="decimal2Type"/>
+            <xsd:element name="precCajBan" type="decimal2Type"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="retencionType">
+        <xsd:sequence>
+            <xsd:element name="codigo" type="texto25Type"/>
+            <xsd:element name="codigoRetencion" type="texto25Type"/>
+            <xsd:element name="baseImponible" type="decimal2Type"/>
+            <xsd:element name="porcentajeRetener" type="decimal6Type"/>
+            <xsd:element name="valorRetenido" type="decimal2Type"/>
+            <xsd:element name="dividendos" type="dividendosType" minOccurs="0"/>
+            <xsd:element name="compraCajBanano" type="compraCajBananoType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="detalleImpuestoType">
+        <xsd:sequence>
+            <xsd:element name="codImpuestoReembolso" type="texto25Type"/>
+            <xsd:element name="baseImponibleReembolso" type="decimal2Type"/>
+            <xsd:element name="impuestoReembolso" type="decimal2Type"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="reembolsoDetalleType">
+        <xsd:sequence>
+            <xsd:element name="tipoIdentificacionProveedorReembolso" type="texto25Type"/>
+            <xsd:element name="identificacionProveedorReembolso" type="texto25Type"/>
+            <xsd:element name="codPaisPagoProveedorReembolso" type="texto25Type"/>
+            <xsd:element name="tipoProveedorReembolso" type="texto25Type"/>
+            <xsd:element name="codDocReembolso" type="texto25Type"/>
+            <xsd:element name="estabDocReembolso" type="codigoEstablecimientoType"/>
+            <xsd:element name="ptoEmiDocReembolso" type="codigoEstablecimientoType"/>
+            <xsd:element name="secuencialDocReembolso" type="secuencialType"/>
+            <xsd:element name="fechaEmisionDocReembolso" type="fechaType"/>
+            <xsd:element name="numeroAutorizacionDocReemb" type="textoLargoType"/>
+            <xsd:element name="detalleImpuestos">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="detalleImpuesto" type="detalleImpuestoType" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="pagoType">
+        <xsd:sequence>
+            <xsd:element name="formaPago" type="texto25Type"/>
+            <xsd:element name="total" type="decimal2Type"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="docSustentoType">
+        <xsd:sequence>
+            <xsd:element name="codSustento" type="texto25Type"/>
+            <xsd:element name="codDocSustento" type="texto25Type"/>
+            <xsd:element name="numDocSustento" type="documentoSustentoType" minOccurs="0"/>
+            <xsd:element name="fechaEmisionDocSustento" type="fechaType"/>
+            <xsd:element name="fechaRegistroContable" type="fechaType" minOccurs="0"/>
+            <xsd:element name="numAutDocSustento" type="textoLargoType" minOccurs="0"/>
+            <xsd:element name="pagoLocExt" type="texto25Type"/>
+            <xsd:element name="tipoRegi" type="texto25Type" minOccurs="0"/>
+            <xsd:element name="paisEfecPago" type="texto25Type" minOccurs="0"/>
+            <xsd:element name="aplicConvDobTrib" type="texto25Type" minOccurs="0"/>
+            <xsd:element name="pagExtSujRetNorLeg" type="texto25Type" minOccurs="0"/>
+            <xsd:element name="pagoRegFis" type="texto25Type" minOccurs="0"/>
+            <xsd:element name="totalComprobantesReembolso" type="decimal2Type" minOccurs="0"/>
+            <xsd:element name="totalBaseImponibleReembolso" type="decimal2Type" minOccurs="0"/>
+            <xsd:element name="totalImpuestoReembolso" type="decimal2Type" minOccurs="0"/>
+            <xsd:element name="totalSinImpuestos" type="decimal2Type"/>
+            <xsd:element name="importeTotal" type="decimal2Type"/>
+            <xsd:element name="impuestosDocSustento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="impuestoDocSustento" type="impuestoDocSustentoType" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="retenciones">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retencion" type="retencionType" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="reembolsos" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="reembolsoDetalle" type="reembolsoDetalleType" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="pagos">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="pago" type="pagoType" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="campoAdicionalType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="nombre" type="texto300Type" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:element name="comprobanteRetencion">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="infoTributaria" type="infoTributariaType"/>
+                <xsd:element name="infoCompRetencion" type="infoCompRetencionType"/>
+                <xsd:element name="docsSustento">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="docSustento" type="docSustentoType" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="infoAdicional" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="campoAdicional" type="campoAdicionalType" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:string" use="required" fixed="comprobante"/>
+            <xsd:attribute name="version" type="xsd:string" use="required" fixed="2.0.0"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
