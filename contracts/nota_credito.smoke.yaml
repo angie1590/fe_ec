@@ -1,0 +1,111 @@
+version: 1
+
+nota_credito:
+  # Intentionally omit fecha_emision and secuencial so test_nota_credito.py
+  # uses today's date and a fresh sequential at runtime.
+  tipo_emision: "1"
+  output_xml: ".artifacts/xml/nota_credito.smoke.xml"
+  moneda: "DOLAR"
+
+  emisor:
+    ruc: "0103523908001"
+    razon_social: "PRUEBAS SERVICIO DE RENTAS INTERNA"
+    nombre_comercial: "MiComercio"
+    estab: "001"
+    pto_emi: "001"
+    dir_matriz: "Av. Principal 123"
+    dir_establecimiento: "Av. Secundaria 456"
+    obligado_contabilidad: "NO"
+
+  comprador:
+    tipo_identificacion: "04"
+    razon_social: "PRUEBAS SERVICIO DE RENTAS INTERNA"
+    identificacion: "0195125988001"
+
+  comprobante_modificado:
+    cod_doc_modificado: "01"
+    num_doc_modificado: "001-001-347749499"
+    fecha_emision_doc_sustento: "18/03/2026"
+
+  total_sin_impuestos: "1111.91"
+  valor_modificacion: "1277.49"
+  motivo: "ANULACION TOTAL DE FACTURA AUTORIZADA"
+
+  total_con_impuestos:
+    - codigo: "2"
+      codigo_porcentaje: "4"
+      base_imponible: "980.43"
+      valor: "147.06"
+    - codigo: "2"
+      codigo_porcentaje: "7"
+      base_imponible: "100.00"
+      valor: "0.00"
+    - codigo: "2"
+      codigo_porcentaje: "6"
+      base_imponible: "50.00"
+      valor: "0.00"
+    - codigo: "3"
+      codigo_porcentaje: "3043"
+      base_imponible: "861.91"
+      valor: "18.52"
+
+  detalles:
+    - codigo_interno: "P001"
+      descripcion: "Producto de prueba"
+      cantidad: "1.00"
+      precio_unitario: "100.00"
+      descuento: "0.00"
+      precio_total_sin_impuesto: "100.00"
+      impuestos:
+        - codigo: "2"
+          codigo_porcentaje: "4"
+          tarifa: "15.00"
+          base_imponible: "100.00"
+          valor: "15.00"
+    - codigo_interno: "P002"
+      descripcion: "Producto de prueba 2 (exento)"
+      cantidad: "1.00"
+      precio_unitario: "100.00"
+      descuento: "0.00"
+      precio_total_sin_impuesto: "100.00"
+      impuestos:
+        - codigo: "2"
+          codigo_porcentaje: "7"
+          tarifa: "0.00"
+          base_imponible: "100.00"
+          valor: "0.00"
+    - codigo_interno: "P003"
+      descripcion: "Producto de prueba 3 (no grava IVA)"
+      cantidad: "1.00"
+      precio_unitario: "50.00"
+      descuento: "0.00"
+      precio_total_sin_impuesto: "50.00"
+      impuestos:
+        - codigo: "2"
+          codigo_porcentaje: "6"
+          tarifa: "0.00"
+          base_imponible: "50.00"
+          valor: "0.00"
+    - codigo_interno: "C001"
+      descripcion: "Cerveza artesanal 4L"
+      cantidad: "225.00"
+      precio_unitario: "3.83"
+      descuento: "0.00"
+      precio_total_sin_impuesto: "861.91"
+      impuestos:
+        - codigo: "2"
+          codigo_porcentaje: "4"
+          tarifa: "15.00"
+          base_imponible: "880.43"
+          valor: "132.06"
+        - codigo: "3"
+          codigo_porcentaje: "3043"
+          tarifa: "0"
+          base_imponible: "861.91"
+          valor: "18.52"
+
+  info_adicional:
+    - nombre: "email"
+      valor: "cliente@ejemplo.com"
+    - nombre: "telefono"
+      valor: "0999999999"

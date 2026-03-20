@@ -120,6 +120,17 @@ class ManejadorXML:
         if normalized_tag == "infoAdicional":
             return None
 
+        attribute_elements = config.get("attribute_elements", {})
+        if (
+            normalized_tag in attribute_elements
+            and isinstance(contenido, dict)
+        ):
+            return self._construir_elemento_con_atributos(
+                normalized_tag,
+                contenido,
+                attribute_elements[normalized_tag],
+            )
+
         if isinstance(contenido, dict):
             element = etree.Element(normalized_tag)
             for child_tag, child_value in contenido.items():
@@ -136,6 +147,23 @@ class ManejadorXML:
 
         element = etree.Element(normalized_tag)
         element.text = str(contenido)
+        return element
+
+    def _construir_elemento_con_atributos(
+        self,
+        tag: str,
+        contenido: dict,
+        required_attributes: tuple[str, ...],
+    ):
+        element = etree.Element(tag)
+        for attribute_name in required_attributes:
+            value = contenido.get(attribute_name)
+            text = str(value).strip() if value is not None else ""
+            if not text:
+                raise ValueError(
+                    f"{tag}.{attribute_name} es obligatorio para el XML oficial."
+                )
+            element.set(attribute_name, text)
         return element
 
     def construir_info_adicional(self, datos, config: dict):

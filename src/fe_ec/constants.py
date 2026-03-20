@@ -190,12 +190,19 @@ DOCUMENT_METADATA = {
         "required_blocks": ("infoTributaria", "infoNotaCredito", "detalles"),
         "tag_aliases": {},
         "container_item_map": {
+            "totalConImpuestos": "totalImpuesto",
+            "compensaciones": "compensacion",
             "detalles": "detalle",
             "impuestos": "impuesto",
             "detallesAdicionales": "detAdicional",
         },
+        "attribute_elements": {
+            "detAdicional": ("nombre", "valor"),
+        },
         "repeated_item_tags": {
             "detalle",
+            "totalImpuesto",
+            "compensacion",
             "impuesto",
             "campoAdicional",
             "detAdicional",
@@ -231,6 +238,9 @@ DOCUMENT_METADATA = {
             "destinatarios": "destinatario",
             "detalles": "detalle",
         },
+        "attribute_elements": {
+            "detAdicional": ("nombre", "valor"),
+        },
         "repeated_item_tags": {
             "destinatario",
             "detalle",
@@ -253,6 +263,9 @@ DOCUMENT_METADATA = {
             "detalles": "detalle",
             "impuestos": "impuesto",
             "detallesAdicionales": "detAdicional",
+        },
+        "attribute_elements": {
+            "detAdicional": ("nombre", "valor"),
         },
         "repeated_item_tags": {
             "pago",

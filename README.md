@@ -70,6 +70,25 @@ poetry run python test_retencion.py --contract contracts/retencion.example.yaml
 ```
 
 El contrato de ejemplo vive en [contracts/retencion.example.yaml](/Users/andrea/Documents/Proyectos/fe_ec/contracts/retencion.example.yaml).
+
+Para notas de credito electronicas (`codDoc = 04`):
+
+```bash
+poetry run python test_nota_credito.py --contract contracts/nota_credito.example.yaml
+```
+
+El contrato de ejemplo vive en [contracts/nota_credito.example.yaml](/Users/andrea/Documents/Proyectos/fe_ec/contracts/nota_credito.example.yaml).
+Tambien hay un smoke contract ya validado contra el SRI en
+[contracts/nota_credito.smoke.yaml](/Users/andrea/Documents/Proyectos/fe_ec/contracts/nota_credito.smoke.yaml).
+Ese contrato omite `fecha_emision` y `secuencial` para que el wrapper use la fecha
+de hoy y un secuencial nuevo en cada ejecucion:
+
+```bash
+FEEC_P12_PASSWORD="TU_PASSWORD" \
+FEEC_AMBIENTE="1" \
+poetry run python test_nota_credito.py --contract contracts/nota_credito.smoke.yaml
+```
+
 Por defecto, los scripts de prueba dejan sus XML firmados en `.artifacts/xml/`,
 que está ignorado por git.
 
@@ -109,6 +128,7 @@ La librería toma su configuración de runtime desde variables de entorno:
 - `FEEC_XSD_PATH`: Opcional. Ruta al esquema XML del SRI si quieres sobrescribir el XSD empaquetado.
 - `FEEC_FACTURA_XSD_PATH`: Opcional. Sobrescribe el XSD empaquetado de factura.
 - `FEEC_RETENCION_XSD_PATH`: Opcional. Sobrescribe el XSD empaquetado de retención ATS 2.0.0.
+- `FEEC_NOTA_CREDITO_XSD_PATH`: Opcional. Sobrescribe el XSD empaquetado de nota de crédito 1.1.0.
 - `FEEC_AMBIENTE`: `pruebas`, `produccion`, `1` o `2`.
 - `FEEC_JAVA_BIN`: Opcional, binario de Java a usar si no quieres depender de `PATH`.
 
@@ -123,6 +143,7 @@ ni como configuración global del proceso.
 
 - Facturas electrónicas (codDoc = 01)
 - Comprobantes de retención ATS (codDoc = 07)
+- Notas de crédito electrónicas (codDoc = 04)
 - Firma digital según XAdES-BES
 - Validación por XSD oficial del SRI empaquetado en la librería
 

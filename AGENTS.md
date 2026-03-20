@@ -1,6 +1,6 @@
 # fe_ec Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-13
+Auto-generated from all feature plans. Last updated: 2026-03-19
 
 ## Active Technologies
 - Python `>=3.10,<3.12` via Poetry
@@ -9,6 +9,7 @@ Auto-generated from all feature plans. Last updated: 2026-03-13
 - `zeep 4.3.1` for SOAP integration with SRI
 - `cryptography 40.0.2` for Python-side crypto primitives
 - Bundled Java signing toolchain for XAdES-BES (`FirmaElectronica.jar` + `lib/`)
+- Nota de credito support implemented against official SRI schema `notaCredito` 1.1.0 within the existing Python/Poetry + `lxml` + `zeep` pipeline (003-notas-credito-electronicas)
 
 ## Project Structure
 
@@ -32,6 +33,7 @@ project architecture at all times; do not introduce structural rewrites, new
 layers, or directory reorganizations.
 
 ## Recent Changes
+- 003-notas-credito-electronicas: implemented support for electronic credit notes `notaCredito` 1.1.0 using the existing XML/signing/SRI pipeline and contract-driven business inputs
 - 002-retenciones-electronicas: planned support for retention ATS 2.0.0 by
   extending the existing XML/signing/SRI pipeline without changing architecture
 

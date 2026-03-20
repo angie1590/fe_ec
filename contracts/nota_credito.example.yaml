@@ -1,0 +1,60 @@
+version: 1
+
+nota_credito:
+  fecha_emision: "19/03/2026"
+  secuencial: "000000123"
+  tipo_emision: "1"
+  output_xml: ".artifacts/xml/nota_credito.example.xml"
+  moneda: "DOLAR"
+
+  emisor:
+    ruc: "0103523908001"
+    razon_social: "PINEDA ALVAREZ DANIEL FERNANDO"
+    nombre_comercial: "PINEDA ALVAREZ DANIEL FERNANDO"
+    estab: "001"
+    pto_emi: "001"
+    dir_matriz: "Av. Principal 123"
+    dir_establecimiento: "Av. Secundaria 456"
+    obligado_contabilidad: "NO"
+
+  comprador:
+    tipo_identificacion: "04"
+    razon_social: "CLIENTE DE PRUEBA S.A."
+    identificacion: "0195125988001"
+
+  comprobante_modificado:
+    cod_doc_modificado: "01"
+    num_doc_modificado: "001-001-000000321"
+    fecha_emision_doc_sustento: "18/03/2026"
+
+  total_sin_impuestos: "100.00"
+  valor_modificacion: "115.00"
+  motivo: "DEVOLUCION PARCIAL"
+
+  total_con_impuestos:
+    - codigo: "2"
+      codigo_porcentaje: "4"
+      base_imponible: "100.00"
+      valor: "15.00"
+
+  detalles:
+    - codigo_interno: "P001"
+      codigo_adicional: "P001-A"
+      descripcion: "Producto ajustado"
+      cantidad: "1.00"
+      precio_unitario: "100.00"
+      descuento: "0.00"
+      precio_total_sin_impuesto: "100.00"
+      detalles_adicionales:
+        - nombre: "lote"
+          valor: "ABC123"
+      impuestos:
+        - codigo: "2"
+          codigo_porcentaje: "4"
+          tarifa: "15.00"
+          base_imponible: "100.00"
+          valor: "15.00"
+
+  info_adicional:
+    - nombre: "email"
+      valor: "cliente@ejemplo.com"
